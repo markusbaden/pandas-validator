@@ -21,3 +21,17 @@ class BaseIndexValidatorTest(TestCase):
     def test_is_invalid_when_type_is_not_ok(self):
         index = pd.Index(['a', 'b', 'c'])
         self.assertRaises(ValidationError, self.validator.validate, index)
+
+
+class BaseIndexValidatorValuesTest(TestCase):
+
+    def setUp(self):
+        self.validator = pv.BaseIndexValidator(values=['one', 'two'])
+
+    def test_is_valid_when_values_are_ok(self):
+        index = pd.Index(['one', 'two'])
+        self.assertIsNone(self.validator.validate(index))
+
+    def test_is_invalid_when_values_are_not_ok(self):
+        index = pd.Index([1, 2])
+        self.assertRaises(ValidationError, self.validator.validate, index)

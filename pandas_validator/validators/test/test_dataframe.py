@@ -93,3 +93,23 @@ class DataFrameValidatorColumnsIndexTest(TestCase):
     def test_invalid_when_not_matches_columns_type(self):
         df = pd.DataFrame([[0, 1, 2], [1., 2., 3.]])
         self.assertFalse(self.validator.is_valid(df))
+
+
+class DataFrameValidatorFixtureWithColumnValues(pv.DataFrameValidator):
+    """Fixture for testing the validation of columns validator with values"""
+    columns = pv.ColumnsValidator(values=['x', 'y'])
+
+
+class DataFrameValidatorColumnsWithValuesTest(TestCase):
+    """Testing the validation of columns with values"""
+
+    def setUp(self):
+        self.validator = DataFrameValidatorFixtureWithColumnValues()
+
+    def test_valid_when_values_match(self,):
+        df = pd.DataFrame({'x': [0, 1, 2], 'y': [1., 2., 3.]})
+        self.assertTrue(self.validator.is_valid(df))
+
+    def test_invalid_when_values_do_not_match(self, ):
+        df = pd.DataFrame({'one': [0, 1, 2], 'two': [1., 2., 3.]})
+        self.assertFalse(self.validator.is_valid(df))
